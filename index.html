@@ -6,8 +6,43 @@
     <link rel="stylesheet" href="assets/theme.css">
     <link rel="stylesheet" href="assets/style.css">
   </head>
+  
+ <header class="site-header">
+    
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="links">
+      <span class="nav-home current">home</span>
+      <div>
+        <a href="./about.html" class="nav-about">about</a>
+        </div>
+    </div>
+
+
+    <div class="nav-search">
+      <form method="get" class="nav-search" role="search">
+        <label for="q" class="visually-hidden">Search</label>
+        <input
+          type="search"
+          id="q"
+          name="q"
+          placeholder="Search…"
+          autocomplete="off"
+        />
+      </form>
+    </div>
+  </nav>
+</header>
+
+  <div class="container">
+    <div class="tags-box">
+      <h3>Tags</h3>
+      <div id="tags-container">
+        <span class="tag">#tag1</span>
+      </div>
+    </div>
+
   <body class="theme-dark">
-  <div class="posts">
+  <div id="posts-container" class="posts">
       <div class="post-box">
         <div class="post-info">
           <h2 class="post-title">Justifying game-time using time travel and wormholes</h2>
@@ -21,4 +56,111 @@
     </div>
   </div>
   </body>
+
+  <script>
+let allPosts = [];
+let activeTag = null;
+
+const postsContainer = document.getElementById('posts-container');
+const searchBox = document.getElementById('q');
+
+fetch('./posts.json')
+  .then(res => res.json())
+  .then(posts => {
+    allPosts = posts.sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
+    renderTags(allPosts);
+    renderPosts(allPosts);
+  });
+
+function renderPosts(posts) {
+  postsContainer.innerHTML = '';
+
+  if (posts.length === 0) {
+    postsContainer.innerHTML = `
+      <p style="color: var(--text-faint);">
+        No matching posts.
+      </p>`;
+    return;
+  }
+
+  posts.forEach(post => {
+    const el = document.createElement('div');
+    el.className = 'post-box';
+    el.innerHTML = `
+      <div class="post-info">
+        <h2 class="post-title">${post.title}</h2>
+        <p class="post-meta">
+          ${post.date} |
+          ${post.tags.map(t => `<span class="tag">${t}</span>`).join(' ')}
+        </p>
+        <p class="post-summary">${post.summary}</p>
+      </div>
+      <button class="read-more" onclick="location.href='${post.url}'">❭</button>
+    `;
+    postsContainer.appendChild(el);
+  });
+}
+
+searchBox.addEventListener('input', updateView);
+
+const tagsContainer = document.getElementById('tags-container');
+
+function renderTags(posts) {
+  const tagSet = new Set();
+
+  posts.forEach(post => {
+    post.tags.forEach(tag => tagSet.add(tag));
+  });
+
+  tagsContainer.innerHTML = '';
+
+  [...tagSet].sort().forEach(tag => {
+    const el = document.createElement('span');
+    el.className = 'tag';
+    el.textContent = `#${tag}`;
+
+    el.onclick = () => {
+      activeTag = (activeTag === tag) ? null : tag;
+      updateView();
+    };
+
+    tagsContainer.appendChild(el);
+  });
+}
+
+function updateView() {
+  const q = searchBox.value.toLowerCase().trim();
+
+  let filtered = allPosts;
+
+  if (activeTag) {
+    filtered = filtered.filter(p => p.tags.includes(activeTag));
+  }
+
+  if (q) {
+    filtered = filtered.filter(post =>
+      post.title.toLowerCase().includes(q) ||
+      post.summary.toLowerCase().includes(q) ||
+      post.excerpt.toLowerCase().includes(q) ||
+      post.tags.some(t => t.toLowerCase().includes(q))
+    );
+  }
+
+  renderPosts(filtered);
+  highlightActiveTag();
+}
+
+function highlightActiveTag() {
+  document.querySelectorAll('#tags-container .tag').forEach(tagEl => {
+    tagEl.classList.toggle(
+      'active-tag',
+      tagEl.textContent === `#${activeTag}`
+    );
+  });
+}
+
+
+</script>
 </html>

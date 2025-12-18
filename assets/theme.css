@@ -7,7 +7,6 @@ body {
     --h4-color: var(--text-title-h4);
     --h5-color: var(--text-title-h5);
     --h6-color: var(--text-title-h6);
-    --file-line-width: 950px;
 }
 
 :root
@@ -89,10 +88,13 @@ body {
 --tag-background: rgba(94,108,152,10%);
 --tag-background-hover: rgba(94,108,152,20%);
 --tag-border-width: 0px;
+--tag-padding-x: 0.65em;
+--tag-padding-y: 0.25em;
+--tag-radius: 2em;
 --tag-border-color: rgba(94,108,152,15%);
 --tag-border-color-hover: rgba(94,108,152,15%);
---tag-color: var(var(--text-accent));
---tag-color-hover: var(var(--text-accent));
+--tag-color: var(--dim-blue);
+--tag-color-hover: var(--dim-blue);
 
 }
 
@@ -120,7 +122,7 @@ body {
     --interactive-accent:         var(--dim-blue);
     --interactive-before:         var(--bg5-dark);
     --background-modifier-border: var(--bg5-dark);
-    --text-accent:                var(--dim-aqua);
+    --text-accent:                var(--dim-blue);
     --interactive-accent-rgb:     var(--dim-blue);
     --inline-code:                var(--dim-blue);
     --code-block:                 var(--fg-dark);
@@ -259,18 +261,36 @@ TAGS
   }
   
     .tag {
-    background-color: var(--tag-background);
-    border: var(--tag-border-width) solid var(--tag-border-color);
-    color: var(--tag-color);
-    font-weight: 500;
-    padding: 1.5px 6px;
-    padding-left: 6px;
-    padding-right: 6px;
+    outline: 0;
     text-align: center;
-    text-decoration: none !important;
+    text-decoration: none!important;
     display: inline-block;
     cursor: pointer;
-    border-radius: 8px;
+    transition: .1s ease-in-out;
+    background-color: var(--tag-background);
+    border: var(--tag-border-width) solid var(--tag-border-color);
+    border-radius: var(--tag-radius);
+    color: var(--tag-color);
+    font-size: var(--tag-size);
+    font-weight: var(--tag-weight);
+    padding: var(--tag-padding-y) var(--tag-padding-x);
+    line-height: 1;
+  }
+
+  .tag:hover {
+    text-align: center;
+    text-decoration: none!important;
+    display: inline-block;
+    cursor: pointer;
+    transition: .1s ease-in-out;
+    border-radius: var(--tag-radius);
+    font-size: var(--tag-size);
+    font-weight: var(--tag-weight);
+    padding: var(--tag-padding-y) var(--tag-padding-x);
+    line-height: 1;
+    background-color: var(--tag-background-hover);
+    border: var(--tag-border-width) solid var(--tag-border-color-hover);
+    color: var(--tag-color-hover);
   }
   
   
