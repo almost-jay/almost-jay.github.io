@@ -1,169 +1,24 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>SVG Go Board – Programmatic Intersections</title>
-
-<style>
-    body {
-        background: #1e1e1e;
-        color: #ddd;
-        font-family: sans-serif;
-        display: flex;
-        justify-content: center;
-        padding-top: 2rem;
-    }
-
-    svg {
-        background: #deb887;
-        border: 2px solid #333;
-    }
-
-    a:hover circle.hit {
-        fill: rgba(0, 0, 0, 0.25);
-    }
-
-    #info {
-        margin-top: 0.75rem;
-        text-align: center;
-        font-size: 0.9rem;
-        color: #aaa;
-    }
-</style>
-</head>
-
-<body>
-<div>
-    <svg id="board" width="400" height="400"
-         viewBox="0 0 400 400"></svg>
-
-    <div id="info">
-        Click to place stones. Black moves first.
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="assets/theme.css">
+    <link rel="stylesheet" href="assets/style.css">
+  </head>
+  <body class="theme-dark">
+  <div class="posts">
+      <div class="post-box">
+        <div class="post-info">
+          <h2 class="post-title">Justifying game-time using time travel and wormholes</h2>
+          <p class="post-meta">2025-12-18 | <span class="post-tags"><a class="tag">second_sun</a> <a class="tag">sidequests</a></span></p>
+          <p class="post-summary">
+            In which I attempt to explain what I learnt on a rabbit hole into time travel
+          </p>
+        </div>
+        <button class="read-more" onclick="location.href='pages/justifying-game-time-using-time-travel-and-wormholes.html'">❭</button>
+      </div>
     </div>
-</div>
-
-<script>
-
-const boardSize = 9;
-const margin = 40;
-const spacing = 40;
-const stoneRadius = 16;
-const hitRadius = 14;
-
-/*
-gamestate[y][x] is:
-    null  -> empty
-    true  -> black
-    false -> white
-*/
-const gamestate = Array.from({ length: boardSize }, () =>
-    Array(boardSize).fill(null)
-);
-
-let currentPlayer = true; // true = black, false = white
-
-const svg = document.getElementById("board");
-
-function svgEl(name, attrs = {}) {
-    const el = document.createElementNS("http://www.w3.org/2000/svg", name);
-    for (const k in attrs) el.setAttribute(k, attrs[k]);
-    return el;
-}
-
-function drawGrid() {
-    const g = svgEl("g", { stroke: "#000", "stroke-width": 2 });
-
-    for (let i = 0; i < boardSize; i++) {
-        const pos = margin + i * spacing;
-
-        g.appendChild(svgEl("line", {
-            x1: margin,
-            y1: pos,
-            x2: margin + spacing * (boardSize - 1),
-            y2: pos
-        }));
-
-        g.appendChild(svgEl("line", {
-            x1: pos,
-            y1: margin,
-            x2: pos,
-            y2: margin + spacing * (boardSize - 1)
-        }));
-    }
-
-    svg.appendChild(g);
-}
-
-
-function drawStones() {
-    svg.querySelectorAll(".stone").forEach(n => n.remove());
-
-    for (let y = 0; y < boardSize; y++) {
-        for (let x = 0; x < boardSize; x++) {
-            const v = gamestate[y][x];
-            if (v === null) continue;
-
-            const cx = margin + x * spacing;
-            const cy = margin + y * spacing;
-
-            svg.appendChild(svgEl("circle", {
-                class: "stone",
-                cx, cy,
-                r: stoneRadius,
-                fill: v ? "#000" : "#fff",
-                stroke: "#000"
-            }));
-        }
-    }
-}
-
-function handleClick(x, y) {
-    if (gamestate[y][x] !== null) return;
-
-    gamestate[y][x] = currentPlayer;
-    currentPlayer = !currentPlayer;
-
-    drawStones();
-}
-
-function generateIntersections() {
-    const g = svgEl("g");
-
-    for (let y = 0; y < boardSize; y++) {
-        for (let x = 0; x < boardSize; x++) {
-
-            const cx = margin + x * spacing;
-            const cy = margin + y * spacing;
-
-            const a = svgEl("a", { href: "#" });
-
-            const hit = svgEl("circle", {
-                class: "hit",
-                cx, cy,
-                r: hitRadius,
-                fill: "transparent"
-            });
-
-            hit.addEventListener("click", e => {
-                e.preventDefault();
-                handleClick(x, y);
-            });
-
-            hit.appendChild(svgEl("title", {},));
-            hit.lastChild.textContent =
-                String.fromCharCode(65 + x) + (boardSize - y);
-
-            a.appendChild(hit);
-            g.appendChild(a);
-        }
-    }
-
-    svg.appendChild(g);
-}
-
-drawGrid();
-generateIntersections();
-drawStones();
-</script>
-</body>
+  </div>
+  </body>
 </html>
