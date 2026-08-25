@@ -12,5 +12,12 @@
     "tags": ["second_sun"],
     "summary": "The background for what I keep mentioning",
     "url": "pages/what-is-second-sun.html"
+  },
+  {
+    "title": "Keeping a shrimp tank",
+    "date": "2026-08-26",
+    "tags": ["aquariums"],
+    "summary": "Very loose collection of notes totalling something like 25k words on keeping shrimp in a filterless tank",
+    "url": "pages/shrimp-guide.html"
   }
 ]
