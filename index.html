@@ -7,6 +7,26 @@
     <link rel="stylesheet" href="assets/style.css">
   </head>
   <body class="theme-dark">
+    <header class="site-header">
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="links">
+    <div>
+      <a href="../index.html" class="nav-home current">home</a>
+    </div>
+
+    <div>
+      <a href="../about.html" class="nav-about">about</a>
+    </div>
+    </div>
+
+    <div class="nav-search">
+      <form action="/search" method="get" class="nav-search" role="search">
+        <label for="q" class="visually-hidden">Search</label>
+        <input type="search" id="q" name="q" placeholder="Search…" autocomplete="off">
+      </form>
+    </div>
+  </nav>
+</header>
   <div class="posts">
       <div class="post-box">
         <div class="post-info">
