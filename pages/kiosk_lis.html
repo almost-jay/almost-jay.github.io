@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Locks viewport, disables pinch-to-zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>eXLR LIS v4.1.02</title>
+    <style>
+        /* eXLR LIS — legacy laboratory information system skin */
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: #e7e7e7;
+            color: #202020;
+            font-family: Tahoma, Arial, sans-serif;
+            font-size: 11px;
+            touch-action: none;
+        }
+
+        body {
+            min-width: 900px;
+        }
+
+        button, input {
+            font: inherit;
+        }
+
+        .window {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #7a7a7a;
+            background: #dcdcdc;
+        }
+
+        /* Application chrome */
+        .title-bar {
+            height: 25px;
+            flex: 0 0 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6px 0 8px;
+            color: #fff;
+            background: linear-gradient(#53799e, #315574);
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .title-bar .caption {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .app-icon {
+            width: 12px;
+            height: 12px;
+            border: 1px solid #d7e4ef;
+            background: #7d9bb6;
+            box-shadow: inset 1px 1px #b9cad8;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 2px;
+        }
+
+        .window-control {
+            width: 17px;
+            height: 15px;
+            padding: 0;
+            border: 1px solid #29455d;
+            color: #fff;
+            background: #527796;
+            line-height: 11px;
+            font-size: 10px;
+        }
+
+        .menu-bar {
+            height: 22px;
+            flex: 0 0 22px;
+            display: flex;
+            align-items: center;
+            padding: 0 7px;
+            border-bottom: 1px solid #aaa;
+            background: #efefef;
+            color: #222;
+        }
+
+        .menu-item {
+            padding: 3px 9px;
+            height: 21px;
+        }
+
+        .menu-item:first-child {
+            padding-left: 3px;
+        }
+
+        .menu-item:hover {
+            background: #d6e2ec;
+        }
+
+        .toolbar {
+            height: 31px;
+            flex: 0 0 31px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            padding: 3px 6px;
+            border-bottom: 1px solid #999;
+            background: #e5e5e5;
+            box-shadow: inset 0 1px #fff;
+        }
+
+        .tool-btn {
+            height: 24px;
+            min-width: 25px;
+            padding: 1px 7px;
+            border: 1px solid #999;
+            border-radius: 2px;
+            background: linear-gradient(#fff, #ddd);
+            color: #222;
+            font-size: 10px;
+        }
+
+        .tool-btn:active {
+            border-color: #666;
+            background: #ccc;
+        }
+
+        .tool-separator {
+            width: 1px;
+            height: 20px;
+            margin: 0 3px;
+            border-left: 1px solid #aaa;
+            border-right: 1px solid #fff;
+        }
+
+        /* Main application frame */
+        .main-workspace {
+            min-height: 0;
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 184px;
+            flex: 0 0 184px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #8c8c8c;
+            background: #d8d8d8;
+        }
+
+        .sidebar-caption {
+            height: 25px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            border-bottom: 1px solid #aaa;
+            background: #c7c7c7;
+            color: #303030;
+            font-weight: bold;
+        }
+
+        .module-group {
+            padding: 6px 0 2px;
+        }
+
+        .module-heading {
+            padding: 3px 8px;
+            color: #555;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .nav-btn {
+            width: 100%;
+            min-height: 27px;
+            padding: 4px 8px 4px 20px;
+            border: 0;
+            border-top: 1px solid transparent;
+            border-bottom: 1px solid transparent;
+            background: transparent;
+            color: #222;
+            text-align: left;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .nav-btn::before {
+            content: '▸';
+            display: inline-block;
+            width: 13px;
+            margin-left: -13px;
+            color: #55718a;
+        }
+
+        .nav-btn:hover {
+            background: #e7edf2;
+        }
+
+        .nav-btn.active {
+            border-top-color: #a7b7c5;
+            border-bottom-color: #a7b7c5;
+            background: #c9d9e6;
+            color: #173b59;
+            font-weight: bold;
+        }
+
+        .sidebar-spacer {
+            flex: 1;
+        }
+
+        .connection-box {
+            margin: 7px;
+            padding: 6px;
+            border: 1px solid #aaa;
+            background: #ededed;
+            color: #555;
+            font-size: 10px;
+            line-height: 1.45;
+        }
+
+        .connection-light {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            margin-right: 4px;
+            border-radius: 50%;
+            background: #4b8a4b;
+            border: 1px solid #2d5f2d;
+        }
+
+        .content-area {
+            min-width: 0;
+            min-height: 0;
+            flex: 1;
+            display: flex;
+            padding: 8px;
+            background: #bdbdbd;
+        }
+
+        .screen {
+            display: none;
+            min-width: 0;
+            min-height: 0;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            border: 1px solid #8b8b8b;
+            background: #f4f4f4;
+            box-shadow: inset 1px 1px #fff;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        .screen-header {
+            height: 31px;
+            flex: 0 0 31px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 9px;
+            border-bottom: 1px solid #9b9b9b;
+            background: linear-gradient(#f9f9f9, #dcdcdc);
+        }
+
+        .screen-title {
+            color: #333;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .screen-meta {
+            color: #666;
+            font-size: 10px;
+        }
+
+        .screen-body {
+            min-height: 0;
+            flex: 1;
+            padding: 9px;
+            overflow: hidden;
+        }
+
+        /* Query module */
+        .query-form {
+            display: grid;
+            grid-template-columns: 150px 1fr auto;
+            gap: 5px;
+            align-items: center;
+            padding: 7px;
+            margin-bottom: 7px;
+            border: 1px solid #aaa;
+            background: #e9e9e9;
+        }
+
+        .field-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            height: 23px;
+            padding: 2px 5px;
+            border: 1px solid #777;
+            border-top-color: #555;
+            background: #fff;
+            color: #111;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        input[type="text"]:focus {
+            outline: 1px solid #5b88ad;
+        }
+
+        .action-btn {
+            min-width: 92px;
+            height: 23px;
+            padding: 2px 10px;
+            border: 1px solid #777;
+            border-radius: 2px;
+            background: linear-gradient(#fff, #ddd);
+            color: #222;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .action-btn:active {
+            background: #ccc;
+            border-color: #555;
+        }
+
+        .action-btn:disabled {
+            color: #999;
+            cursor: default;
+        }
+
+        .query-status {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 1px 4px;
+            color: #666;
+            font-size: 10px;
+        }
+
+        .progress-container {
+            display: none;
+            width: 100%;
+            height: 12px;
+            margin-bottom: 6px;
+            border: 1px solid #777;
+            background: #fff;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: #477aa3;
+            transition: width .2s;
+        }
+
+        .terminal-box {
+            flex: 1;
+            min-height: 80px;
+            padding: 7px;
+            overflow-y: auto;
+            border: 1px solid #777;
+            background: #202326;
+            color: #c4d4c2;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.35;
+            white-space: pre-wrap;
+        }
+
+        .terminated-box {
+            display: none;
+            margin-top: 7px;
+            padding: 13px;
+            border: 1px solid #8b5a5a;
+            background: #302526;
+            color: #efb0b0;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.45;
+        }
+
+        .pdf-container {
+            display: none;
+            min-height: 0;
+            flex: 1;
+            border: 1px solid #777;
+            background: #444;
+            overflow: hidden;
+        }
+
+        iframe.scanned-doc {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background: #fff;
+            transform: rotate(-0.2deg) scale(.995);
+            filter: contrast(125%) brightness(96%) grayscale(45%) sepia(8%);
+        }
+
+        /* Data table */
+        .record-strip {
+            display: flex;
+            gap: 22px;
+            padding: 6px 8px;
+            margin-bottom: 7px;
+            border: 1px solid #aaa;
+            background: #e8e8e8;
+            color: #555;
+        }
+
+        .record-strip b {
+            color: #222;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #777;
+            background: #fff;
+            font-size: 10px;
+        }
+
+        th, td {
+            height: 23px;
+            padding: 3px 6px;
+            border: 1px solid #aaa;
+            text-align: left;
+        }
+
+        th {
+            background: linear-gradient(#eeeeee, #d6d6d6);
+            color: #222;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f3f3f3;
+        }
+
+        tbody tr:hover {
+            background: #e5edf3;
+        }
+
+        /* Audio archive */
+        .audio-list {
+            height: 100%;
+            overflow-y: auto;
+            border: 1px solid #aaa;
+            background: #e8e8e8;
+        }
+
+        .audio-item {
+            padding: 8px;
+            border-bottom: 1px solid #bbb;
+            background: #f7f7f7;
+        }
+
+        .audio-item:last-child {
+            border-bottom: 0;
+        }
+
+        .audio-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .audio-filename {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .audio-index {
+            color: #777;
+        }
+
+        audio {
+            width: 100%;
+            height: 27px;
+        }
+
+        .transcript {
+            margin: 6px 0 0;
+            padding: 5px 7px;
+            border-left: 3px solid #aaa;
+            background: #ededed;
+            color: #444;
+        }
+
+        /* Logs */
+        .log-box {
+            height: 100%;
+            padding: 7px;
+            overflow-y: auto;
+            border: 1px solid #777;
+            background: #202326;
+            color: #d2d2d2;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+        }
+
+        /* Timer */
+        .timer-layout {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-label {
+            margin-bottom: 5px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .timer-display {
+            width: 330px;
+            padding: 10px 18px;
+            border: 2px inset #777;
+            background: #181818;
+            color: #d34c4c;
+            font-family: 'Courier New', monospace;
+            font-size: 42px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            text-align: right;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        /* Application status bar */
+        .status-bar {
+            height: 21px;
+            flex: 0 0 21px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 90px;
+            gap: 3px;
+            padding: 2px 4px;
+            border-top: 1px solid #888;
+            background: #d7d7d7;
+            color: #444;
+            font-size: 10px;
+        }
+
+        .status-cell {
+            padding: 2px 5px;
+            border: 1px inset #eee;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        @media (max-width: 1000px) {
+            body {
+                min-width: 760px;
+            }
+
+            .sidebar {
+                width: 165px;
+                flex-basis: 165px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="window">
+        <div class="title-bar">
+            <div class="caption">
+                <span class="app-icon"></span>
+                <span>eXLR v4.1.02 Laboratory Information System</span>
+            </div>
+            <div class="window-controls">
+                <button class="window-control">_</button>
+                <button class="window-control">□</button>
+                <button class="window-control">×</button>
+            </div>
+        </div>
+<!-- 
+        <div class="menu-bar">
+            <span class="menu-item">File</span>
+            <span class="menu-item">Edit</span>
+            <span class="menu-item">View</span>
+            <span class="menu-item">Records</span>
+            <span class="menu-item">Instruments</span>
+            <span class="menu-item">Reports</span>
+            <span class="menu-item">Window</span>
+            <span class="menu-item">Help</span>
+        </div> -->
+
+        <div class="main-workspace">
+            <aside class="sidebar">
+                <div class="sidebar-caption">System Modules</div>
+
+                <div class="module-group">
+                    <div class="module-heading">Records</div>
+                    <button class="nav-btn active" onclick="switchTab('query', this)">Specimen Registry</button>
+                    <button class="nav-btn" onclick="switchTab('refs', this)">Reference Data</button>
+                    <button class="nav-btn" onclick="switchTab('audio', this)">Audio Archive</button>
+                </div>
+
+                <div class="module-group">
+                    <div class="module-heading">Operations</div>
+                    <button class="nav-btn" onclick="switchTab('timer', this)">Timer</button>
+                    <button class="nav-btn" onclick="switchTab('logs', this)">System Event Log</button>
+                </div>
+
+                <div class="sidebar-spacer"></div>
+
+                <div class="connection-box">
+                    <span class="connection-light"></span><b>Database connection</b><br>
+                    Local service / port 8080<br>
+                    Session: XXXXX
+                </div>
+            </aside>
+
+            <main class="content-area">
+
+                <section id="screen-query" class="screen active">
+                    <div class="screen-header">
+                        <span class="screen-title">Specimen Registry Database Query Engine</span>
+                        <span class="screen-meta">XLR v4.1.02</span>
+                    </div>
+
+                    <div class="screen-body">
+                        <div class="query-form">
+                            <span class="field-label">Specimen / Strain ID</span>
+                            <input type="text" id="strainInput" placeholder="Enter registration ID" autocomplete="off">
+                            <button class="action-btn" id="queryBtn" onclick="executeQuery()">Execute Query</button>
+                        </div>
+
+                        <div class="query-status">
+                            <span>Registry source: LOCAL ARCHIVE</span>
+                            <span>Query mode: exact / normalized</span>
+                        </div>
+
+                        <div class="progress-container" id="loadingContainer">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+
+                        <div class="terminal-box" id="terminalOutput">Ready for input. Enter valid specimen ID string.<br></div>
+
+                        <div class="terminated-box" id="terminatedBox">
+                            RECORD ACCESSED: NON-TARGET SPECIMEN<br>
+                            STATUS: <strong>[ SPECIMEN TERMINATED ]</strong><br>
+                            REASON: EXUDATE PH COLLAPSE / CULL PROTOCOL 09<br>
+                            NO FURTHER ANALYSIS DATA RETAINED ON LOCAL STORAGE.
+                        </div>
+
+                        <div class="pdf-container" id="pdfContainer">
+                            <iframe src="gamma_strain.pdf" class="scanned-doc"></iframe>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="screen-refs" class="screen">
+                    <div class="screen-header">
+                        <span class="screen-title">Reference Data — Alien Sample Strain Profiles</span>
+                        <span class="screen-meta">REF-2026-8842_v3</span>
+                    </div>
+
+                    <div class="screen-body">
+                        <div class="record-strip">
+                            <span><b>Document:</b> REF-2026-8842_v3</span>
+                            <span><b>Classification:</b> INTERNAL USE ONLY</span>
+                        </div>
+                        <div class="record-strip">
+                            <b>Researcher's notes:</b><br>
+                            <i>Nominal reference ranges for 2026 specimens for exudate pH, carotid venous sample NO₂⁻, and glandular extract magnesium/calcium levels respectively.</i>
+                        </div>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Strain ID</th>
+                                    <th>Phenotype</th>
+                                    <th>pH assay</th>
+                                    <th>Nitrite assay (mg/L)</th>
+                                    <th>GH assay (dGH)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>WT-P0</td>
+                                    <td><i>Wild parent stock</i></td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                </tr>
+                                <tr>
+                                    <td>NX-F3-SA</td>
+                                    <td>Mesic</td>
+                                    <td>7.0–7.4</td>
+                                    <td>&lt;0.5</td>
+                                    <td>4–6°</td>
+                                </tr>
+                                <tr>
+                                    <td>B1-F1-HY</td>
+                                    <td>Hypogeal 1</td>
+                                    <td>6.2–6.8</td>
+                                    <td>2.0–3.5</td>
+                                    <td>8–10°</td>
+                                </tr>
+                                <tr>
+                                    <td>B1-F2-AQ</td>
+                                    <td>Aquatic</td>
+                                    <td>7.8–8.4</td>
+                                    <td>1.5–2.5</td>
+                                    <td>&lt;3°</td>
+                                </tr>
+                                <tr>
+                                    <td>NX-F1-AR</td>
+                                    <td>Arboreal 1</td>
+                                    <td>6.5–7.0</td>
+                                    <td>&lt;0.5</td>
+                                    <td>6–8°</td>
+                                </tr>
+                                <tr>
+                                    <td>B1-F3-HY</td>
+                                    <td>Hypogeal 3</td>
+                                    <td>&lt;6.0</td>
+                                    <td>0.05–0.25</td>
+                                    <td>&gt;12°</td>
+                                </tr>
+                                <tr>
+                                    <td>NX-F2-AR</td>
+                                    <td>Arboreal 2</td>
+                                    <td>7.6–8.0</td>
+                                    <td>1.25–2.25</td>
+                                    <td>4–6°</td>
+                                </tr>
+                                <tr>
+                                    <td>M1-F3-HY</td>
+                                    <td>Mutagenised</td>
+                                    <td>&lt;6.0</td>
+                                    <td>&gt;5.0</td>
+                                    <td>&lt;3°</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="screen-audio" class="screen">
+                    <div class="screen-header">
+                        <span class="screen-title">Audio Archive</span>
+                        <span class="screen-meta">LOCAL MEDIA STORE</span>
+                    </div>
+
+                    <div class="screen-body">
+                        <div class="audio-list">
+                            <div class="audio-item">
+                                <div class="audio-item-header">
+                                    <span class="audio-filename">24_09_1618.wav</span>
+                                    <span class="audio-index">ARCHIVE 01</span>
+                                </div>
+                                <audio controls src="log1.mp3"></audio>
+                            </div>
+
+                            <div class="audio-item">
+                                <div class="audio-item-header">
+                                    <span class="audio-filename">24_09_1622.wav</span>
+                                    <span class="audio-index">ARCHIVE 02</span>
+                                </div>
+                                <audio controls src="log2.mp3"></audio>
+                            </div>
+
+                            <div class="audio-item">
+                                <div class="audio-item-header">
+                                    <span class="audio-filename">24_09_1623.wav</span>
+                                    <span class="audio-index">ARCHIVE 03</span>
+                                </div>
+                                <audio controls src="log3.mp3"></audio>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="screen-logs" class="screen">
+                    <div class="screen-header">
+                        <span class="screen-title">System Event Log</span>
+                    </div>
+
+                    <div class="screen-body">
+                        <div class="log-box">[SYSTEM LOG - eXLR LIS SERVICE]
+2026-09-25 00:12:04 [INFO] User 'XXXXX' logged in from LOCAL_TERM_01.
+2026-09-25 09:02:55 [WARN] Could not establish connection to CENTRIFUGE (failed with error code 42)
+2026-09-25 09:12:05 [INFO] User 'XXXXX' was granted access to 'REF-2026-8842_v3'
+2026-09-25 09:12:11 [INFO] User 'XXXXX' requested isolation protocols.
+2026-09-25 09:12:04 [ALERT] The system has engaged isolation protocols.
+2026-09-25 16:18:04 [ALERT] User 'XXXXX' created a new audio file.
+</div>
+                    </div>
+                </section>
+
+                <section id="screen-timer" class="screen">
+                    <div class="screen-header">
+                        <span class="screen-title">Timer</span>
+                        <span class="screen-meta">MANUAL OPERATION</span>
+                    </div>
+
+                    <div class="screen-body">
+                        <div class="timer-layout">
+                            <div class="timer-label">Time remaining</div>
+                            <div class="timer-display" id="timerDisplay">05:00</div>
+                            <div class="timer-controls">
+                                <button class="action-btn" onclick="startTimer()">Start</button>
+                                <button class="action-btn" onclick="pauseTimer()">Pause</button>
+                                <button class="action-btn" onclick="resetTimer()">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+
+        <div class="status-bar">
+            <span class="status-cell">STATUS: CONNECTED</span>
+            <span class="status-cell">HOST: LOCALHOST:8080</span>
+            <span class="status-cell">MEM: 412MB / 2048MB</span>
+            <span class="status-cell">DISK: OK</span>
+        </div>
+    </div>
+
+    <script>
+        // --- GESTURE LOCKOUTS ---
+        document.addEventListener('contextmenu', event => event.preventDefault()); // Right click
+        document.addEventListener('dragstart', event => event.preventDefault());   // Dragging images/text
+
+        // --- NAVIGATION LOGIC ---
+        function switchTab(tabId, button = null) {
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(navButton => navButton.classList.remove('active'));
+
+            document.getElementById('screen-' + tabId).classList.add('active');
+
+            if (button) {
+                button.classList.add('active');
+            } else {
+                document.querySelectorAll('.nav-btn').forEach(navButton => {
+                    if (navButton.getAttribute('onclick').includes("switchTab('" + tabId + "'")) {
+                        navButton.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        // --- TERMINAL QUERY LOGIC ---
+        // Acceptable IDs for Strain Gamma
+        const validIDs = ["B1-F3-HY", "HYPOGEAL3", "HYPOGEAL 3", "B1F3HY"];
+
+        function executeQuery() {
+            const inputEl = document.getElementById('strainInput');
+            const btnEl = document.getElementById('queryBtn');
+            const term = document.getElementById('terminalOutput');
+            const progCont = document.getElementById('loadingContainer');
+            const progBar = document.getElementById('progressBar');
+            const termBox = document.getElementById('terminatedBox');
+            const pdfBox = document.getElementById('pdfContainer');
+
+            let query = inputEl.value.trim().toUpperCase();
+            if (query === "") return;
+
+            // Reset UI
+            inputEl.disabled = true;
+            btnEl.disabled = true;
+            btnEl.innerText = "PROCESSING...";
+            termBox.style.display = "none";
+            pdfBox.style.display = "none";
+            progCont.style.display = "block";
+            progBar.style.width = "0%";
+            term.innerHTML = "Initializing database query for '" + query + "'...<br>";
+
+            // The Loading Sequence Script (Timed events to simulate a 35-second load)
+            const sequence = [
+                { t: 1000, p: 5, m: "Establishing secure connection to optical storage..." },
+                { t: 4000, p: 12, m: "Locating sector corresponding to specimen registry..." },
+                { t: 8000, p: 25, m: "Sector found. Verifying checksums..." },
+                { t: 12000, p: 25, m: "Checksums OK. Decrypting file headers (Key: 412)..." },
+                { t: 15000, p: 40, m: "Decompressing TIFF/PDF image archive..." },
+                { t: 20000, p: 55, m: "Rendering document layout..." },
+                { t: 26000, p: 70, m: "Cross-referencing biological hazard protocols..." },
+                { t: 30000, p: 89, m: "Finalizing data output..." },
+                { t: 35000, p: 100, m: "Query complete." }
+            ];
+
+            sequence.forEach(step => {
+                setTimeout(() => {
+                    progBar.style.width = step.p + "%";
+                    term.innerHTML += step.m + "<br>";
+                    // Auto-scroll to bottom of terminal
+                    term.scrollTop = term.scrollHeight;
+
+                    if (step.p === 100) {
+                        showResult(query);
+                    }
+                }, step.t);
+            });
+        }
+
+        function showResult(query) {
+            const termBox = document.getElementById('terminatedBox');
+            const pdfBox = document.getElementById('pdfContainer');
+            const inputEl = document.getElementById('strainInput');
+            const btnEl = document.getElementById('queryBtn');
+            const progCont = document.getElementById('loadingContainer');
+            const term = document.getElementById('terminalOutput');
+
+            progCont.style.display = "none";
+            term.style.display = "none"; // Hide terminal to make room for result
+
+            if (validIDs.includes(query)) {
+                pdfBox.style.display = "block";
+            } else {
+                termBox.style.display = "block";
+            }
+
+            // Reset inputs (so they can try again if they failed)
+            setTimeout(() => {
+                inputEl.disabled = false;
+                btnEl.disabled = false;
+                btnEl.innerText = "EXECUTE QUERY";
+                inputEl.value = "";
+
+                // If they want to search again, click input to reset view
+                inputEl.addEventListener('focus', () => {
+                    termBox.style.display = "none";
+                    pdfBox.style.display = "none";
+                    term.style.display = "block";
+                    term.innerHTML = "Ready for input. Enter valid specimen ID string.<br>";
+                }, { once: true });
+            }, 2000);
+        }
+
+        // --- TIMER LOGIC ---
+        let timeLeft = 300; // 5 minutes in seconds
+        let timerInterval = null;
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            document.getElementById('timerDisplay').innerText =
+                String(mins).padStart(2, '0') + ":" + String(secs).padStart(2, '0');
+        }
+
+        function startTimer() {
+            if (timerInterval !== null) return;
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    // Optional: Play a sound or flash the screen here
+                    document.getElementById('timerDisplay').style.color = "#FFF";
+                    document.getElementById('timerDisplay').style.backgroundColor = "darkred";
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timeLeft = 300;
+            document.getElementById('timerDisplay').style.color = "red";
+            document.getElementById('timerDisplay').style.backgroundColor = "#000";
+            updateTimerDisplay();
+        }
+    </script>
+</body>
+
+</html>
