@@ -1043,7 +1043,7 @@
                     // Auto-scroll to bottom of terminal
                     term.scrollTop = term.scrollHeight;
 
-                    if (step.p > 1) {
+                    if (step.p >= 100) {
                         showResult(query);
                     }
                 }, step.t);
