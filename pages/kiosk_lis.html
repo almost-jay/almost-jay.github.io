@@ -15,7 +15,8 @@
             -webkit-touch-callout: none;
         }
 
-        html, body {
+        html,
+        body {
             width: 100%;
             height: 100%;
             margin: 0;
@@ -31,7 +32,8 @@
             min-width: 900px;
         }
 
-        button, input {
+        button,
+        input {
             font: inherit;
         }
 
@@ -42,6 +44,70 @@
             flex-direction: column;
             border: 1px solid #7a7a7a;
             background: #dcdcdc;
+        }
+
+        .redacted {
+            display: inline-block;
+            min-width: 58px;
+            padding: 0 2px;
+            background: #111;
+            color: #111;
+            line-height: 1;
+            vertical-align: baseline;
+        }
+
+        .date-tabs {
+            display: flex;
+            align-items: flex-end;
+            height: 27px;
+            margin-bottom: -1px;
+        }
+
+        .date-tab {
+            min-width: 82px;
+            height: 26px;
+            padding: 4px 8px;
+            border: 1px solid #aaa;
+            border-bottom-color: #888;
+            background: #d8d8d8;
+            color: #444;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .date-tab+.date-tab {
+            margin-left: 2px;
+        }
+
+        .date-tab.active {
+            position: relative;
+            z-index: 1;
+            border-bottom-color: #f7f7f7;
+            background: #f7f7f7;
+            color: #222;
+            font-weight: bold;
+        }
+
+        .archive-pane {
+            height: calc(100% - 27px);
+            overflow-y: auto;
+            border: 1px solid #aaa;
+            background: #e8e8e8;
+        }
+
+        .archive-date {
+            display: none;
+            height: 100%;
+        }
+
+        .archive-date.active {
+            display: block;
+        }
+
+        .purged-message {
+            padding: 18px;
+            color: #555;
+            font-style: italic;
         }
 
         /* Application chrome */
@@ -410,12 +476,18 @@
         .pdf-container {
             display: none;
             min-height: 0;
+            height: 100%;
             flex: 1;
             border: 1px solid #777;
             background: #444;
             overflow: hidden;
         }
 
+        iframe body {
+            width: 100%;
+            height: 100%;
+        }
+        
         iframe.scanned-doc {
             width: 100%;
             height: 100%;
@@ -448,7 +520,8 @@
             font-size: 10px;
         }
 
-        th, td {
+        th,
+        td {
             height: 23px;
             padding: 3px 6px;
             border: 1px solid #aaa;
@@ -612,7 +685,7 @@
                 <button class="window-control">×</button>
             </div>
         </div>
-<!-- 
+        <!-- 
         <div class="menu-bar">
             <span class="menu-item">File</span>
             <span class="menu-item">Edit</span>
@@ -646,7 +719,7 @@
                 <div class="connection-box">
                     <span class="connection-light"></span><b>Database connection</b><br>
                     Local service / port 8080<br>
-                    Session: XXXXX
+                    Session: <span class="redacted">XXXXX</span>
                 </div>
             </aside>
 
@@ -674,7 +747,8 @@
                             <div class="progress-bar" id="progressBar"></div>
                         </div>
 
-                        <div class="terminal-box" id="terminalOutput">Ready for input. Enter valid specimen ID string.<br></div>
+                        <div class="terminal-box" id="terminalOutput">Ready for input. Enter valid specimen ID
+                            string.<br></div>
 
                         <div class="terminated-box" id="terminatedBox">
                             RECORD ACCESSED: NON-TARGET SPECIMEN<br>
@@ -684,7 +758,7 @@
                         </div>
 
                         <div class="pdf-container" id="pdfContainer">
-                            <iframe src="gamma_strain.pdf" class="scanned-doc"></iframe>
+                            <iframe src="../assets/escaperoom_neutralisation.pdf" class="scanned-doc"></iframe>
                         </div>
                     </div>
                 </section>
@@ -702,7 +776,8 @@
                         </div>
                         <div class="record-strip">
                             <b>Researcher's notes:</b><br>
-                            <i>Nominal reference ranges for 2026 specimens for exudate pH, carotid venous sample NO₂⁻, and glandular extract magnesium/calcium levels respectively.</i>
+                            <i>Nominal reference ranges for 2026 specimens for exudate pH, carotid venous sample NO₂⁻,
+                                and glandular extract magnesium/calcium levels respectively.</i>
                         </div>
 
                         <table>
@@ -784,32 +859,67 @@
                     </div>
 
                     <div class="screen-body">
-                        <div class="audio-list">
-                            <div class="audio-item">
-                                <div class="audio-item-header">
-                                    <span class="audio-filename">24_09_1618.wav</span>
-                                    <span class="audio-index">ARCHIVE 01</span>
-                                </div>
-                                <audio controls src="log1.mp3"></audio>
+                        <div class="date-tabs" role="tablist">
+                            <button class="date-tab" onclick="showAudioDate('21-09-26', this)">21/09/26</button>
+                            <button class="date-tab" onclick="showAudioDate('22-09-26', this)">22/09/26</button>
+                            <button class="date-tab" onclick="showAudioDate('23-09-26', this)">23/09/26</button>
+                            <button class="date-tab" onclick="showAudioDate('24-09-26', this)">24/09/26</button>
+                            <button class="date-tab active" onclick="showAudioDate('25-09-26', this)">25/09/26</button>
+                        </div>
+
+                        <div class="archive-pane">
+                            <div id="audio-21-09-26" class="archive-date">
+                                <div class="purged-message">These (21) audio recordings have been purged for security reasons</div>
                             </div>
 
-                            <div class="audio-item">
-                                <div class="audio-item-header">
-                                    <span class="audio-filename">24_09_1622.wav</span>
-                                    <span class="audio-index">ARCHIVE 02</span>
-                                </div>
-                                <audio controls src="log2.mp3"></audio>
+                            <div id="audio-22-09-26" class="archive-date">
+                                <div class="purged-message">These (17) audio recordings have been purged for security reasons</div>
                             </div>
 
-                            <div class="audio-item">
-                                <div class="audio-item-header">
-                                    <span class="audio-filename">24_09_1623.wav</span>
-                                    <span class="audio-index">ARCHIVE 03</span>
+                            <div id="audio-23-09-26" class="archive-date">
+                                <div class="purged-message">These (8) audio recordings have been purged for security reasons</div>
+                            </div>
+
+                            <div id="audio-24-09-26" class="archive-date">
+                                <div class="purged-message">These (12) audio recordings have been purged for security reasons</div>
+                            </div>
+
+                            <div id="audio-25-09-26" class="archive-date active">
+                                <div class="audio-list">
+                                    <div class="audio-item">
+                                        <div class="audio-item-header">
+                                            <span class="audio-filename">24_09_1532.wav</span>
+                                            <span class="audio-index">ARCHIVE 01</span>
+                                        </div>
+                                        <audio controls src="../assets/voice-message_1.ogg"></audio>
+                                    </div>
+
+                                    <div class="audio-item">
+                                        <div class="audio-item-header">
+                                            <span class="audio-filename">24_09_1544.wav</span>
+                                            <span class="audio-index">ARCHIVE 02</span>
+                                        </div>
+                                        <audio controls src="../assets/voice-message_2.ogg"></audio>
+                                    </div>
+
+                                    <div class="audio-item">
+                                        <div class="audio-item-header">
+                                            <span class="audio-filename">24_09_1558wav</span>
+                                            <span class="audio-index">ARCHIVE 03</span>
+                                        </div>
+                                        <audio controls src="../assets/voice-message_3.ogg"></audio>
+                                    </div>
+  
+                                    <div class="audio-item">
+                                        <div class="audio-item-header">
+                                            <span class="audio-filename">24_09_1623.wav</span>
+                                            <span class="audio-index">ARCHIVE 04</span>
+                                        </div>
+                                        <audio controls src="../assets/voice-message_4.ogg"></audio>
+                                    </div>
                                 </div>
-                                <audio controls src="log3.mp3"></audio>
                             </div>
                         </div>
-                    </div>
                 </section>
 
                 <section id="screen-logs" class="screen">
@@ -819,13 +929,18 @@
 
                     <div class="screen-body">
                         <div class="log-box">[SYSTEM LOG - eXLR LIS SERVICE]
-2026-09-25 00:12:04 [INFO] User 'XXXXX' logged in from LOCAL_TERM_01.
-2026-09-25 09:02:55 [WARN] Could not establish connection to CENTRIFUGE (failed with error code 42)
-2026-09-25 09:12:05 [INFO] User 'XXXXX' was granted access to 'REF-2026-8842_v3'
-2026-09-25 09:12:11 [INFO] User 'XXXXX' requested isolation protocols.
-2026-09-25 09:12:04 [ALERT] The system has engaged isolation protocols.
-2026-09-25 16:18:04 [ALERT] User 'XXXXX' created a new audio file.
-</div>
+                            2026-09-25 00:12:04 [INFO] User '<span class="redacted">XXXXX</span>' logged in from
+                            LOCAL_TERM_01.
+                            2026-09-25 09:02:55 [WARN] Could not establish connection to CENTRIFUGE (failed with error
+                            code 42)
+                            2026-09-25 09:12:05 [INFO] User '<span class="redacted">XXXXX</span>' was granted access to
+                            'REF-2026-8842_v3'
+                            2026-09-25 09:12:11 [INFO] User '<span class="redacted">XXXXX</span>' requested isolation
+                            protocols.
+                            2026-09-25 09:12:04 [ALERT] The system has engaged isolation protocols.
+                            2026-09-25 16:18:04 [ALERT] User '<span class="redacted">XXXXX</span>' created a new audio
+                            file.
+                        </div>
                     </div>
                 </section>
 
@@ -928,7 +1043,7 @@
                     // Auto-scroll to bottom of terminal
                     term.scrollTop = term.scrollHeight;
 
-                    if (step.p === 100) {
+                    if (step.p > 1) {
                         showResult(query);
                     }
                 }, step.t);
@@ -967,6 +1082,22 @@
                     term.innerHTML = "Ready for input. Enter valid specimen ID string.<br>";
                 }, { once: true });
             }, 2000);
+        }
+
+
+            document.getElementById("strainInput").addEventListener('keydown', (e) => {
+                if (e.key === "Enter") {
+                    document.getElementById("queryBtn").click();
+                }
+            });
+
+        // --- AUDIO ARCHIVE DATE FILTER ---
+        function showAudioDate(dateId, button) {
+            document.querySelectorAll('.archive-date').forEach(panel => panel.classList.remove('active'));
+            document.getElementById('audio-' + dateId).classList.add('active');
+
+            document.querySelectorAll('.date-tab').forEach(tab => tab.classList.remove('active'));
+            button.classList.add('active');
         }
 
         // --- TIMER LOGIC ---
