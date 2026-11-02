@@ -508,8 +508,22 @@
   <script>
     const ROOM_PREFIX = 'chess-p2p-v1-';
     const roomHash = window.location.hostname + window.location.pathname.replace(/[^a-zA-Z0-9]/g, '');
-    const HOST_PEER_ID = ROOM_PREFIX + (roomHash.length > 5 ? roomHash : 'default-room');
+    function makeRoomId() {
+    const roomKey = window.location.origin + window.location.pathname;
+    let hash = 2166136261;
 
+    for (let i = 0; i < roomKey.length; i++) {
+        hash ^= roomKey.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+    }
+
+    const shortHash = (hash >>> 0).toString(16).padStart(8, '0');
+    return ROOM_PREFIX + shortHash;
+}
+
+// const HOST_PEER_ID = ROOM_PREFIX + (roomHash.length > 5 ? roomHash : 'default-room');
+    const HOST_PEER_ID = makeRoomId();
+    
     let peer = null, conn = null, playerRole = null, board = null;
     const game = new Chess();
     let pendingMove = null;
